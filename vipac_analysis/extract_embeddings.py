@@ -1,9 +1,10 @@
 """Extract CLIP-ViT-B/16 embeddings for all VIPAC images."""
 
 import os
+import sys
+import types
 import warnings
 
-import clip
 import numpy as np
 import pandas as pd
 import torch
@@ -11,6 +12,23 @@ from PIL import Image
 from tqdm import tqdm
 
 from vipac_analysis.config import all_image_ids, image_id_str
+
+# openai-clip (archived, last release 2022) starts with
+# `from pkg_resources import packaging`, but setuptools >= 83 (which we
+# require for security) no longer ships pkg_resources. clip.py only uses
+# `packaging` for a torch version check, so provide it from the standalone
+# `packaging` distribution.
+try:
+    import pkg_resources  # noqa: F401
+except ImportError:
+    import packaging
+    import packaging.version  # noqa: F401  (clip.py calls packaging.version.parse)
+
+    _shim = types.ModuleType("pkg_resources")
+    _shim.packaging = packaging
+    sys.modules["pkg_resources"] = _shim
+
+import clip  # noqa: E402
 
 
 def _build_clip(device):
