@@ -7,7 +7,6 @@ CLIP-ViT-B/16 features. The model compares image embeddings against
 Paper: https://arxiv.org/abs/2207.12396
 """
 
-import warnings
 from typing import Optional
 
 import numpy as np
@@ -34,17 +33,10 @@ def build_model(device: Optional[str] = None) -> "CLIPIQA":
     # PIQ's CLIPIQA expects input in [0, data_range]. Default data_range=1.0
     # expects [0,1] input. We set data_range=255.0 so we can pass uint8 values
     # directly (as float tensor) without manual normalization.
-    # piq 0.8.0 calls torch.load without weights_only, which torch 2.5.x
-    # flags with a FutureWarning. The loaded file is piq's official token
-    # file from its GitHub release (trusted source), so suppress it here.
-    with warnings.catch_warnings():
-        warnings.filterwarnings(
-            "ignore",
-            category=FutureWarning,
-            message=r".*weights_only.*",
-            module=r"piq\.utils\.common",
-        )
-        model = CLIPIQA(data_range=255.0)
+    # piq 0.8.0 calls torch.load without weights_only; on torch >= 2.6 that
+    # defaults to True, which is safe here because piq's token file contains
+    # only plain tensors (all within the weights_only allowlist).
+    model = CLIPIQA(data_range=255.0)
     model.eval()
 
     # Move model buffers to device. The feature_extractor is moved inside

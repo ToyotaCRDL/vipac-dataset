@@ -47,7 +47,7 @@ All commands in this repository were executed and verified on:
 | OS | Ubuntu 20.04.1 LTS |
 | GPU | 1x NVIDIA A100-PCIE-40GB (driver 575.57.08) |
 | Python | 3.12.13, managed with uv 0.11.14 |
-| PyTorch | 2.5.1+cu121 (CUDA 12.1) |
+| PyTorch | 2.13.0+cu129 (CUDA 12.9) |
 
 ## Validation analyses
 
