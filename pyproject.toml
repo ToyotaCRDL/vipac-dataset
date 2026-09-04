@@ -26,9 +26,18 @@ dependencies = [
 # not installed as a package.
 package = false
 
+# Keep setuptools (pulled in transitively by torch) at or above the
+# release that fixes the path traversal in PackageIndex.download
+# (arbitrary file write).
+constraint-dependencies = ["setuptools>=83.0.0"]
+
 # PyTorch wheels for CUDA 12.9. Requires NVIDIA driver >= 575; the cu130
 # index and the default PyPI build (CUDA 13.0) need driver >= 580.
 # CPU-only: change the URL below to https://download.pytorch.org/whl/cpu.
+[[tool.uv.index]]
+name = "pypi"
+url = "https://pypi.org/simple"
+
 [[tool.uv.index]]
 name = "pytorch-cu129"
 url = "https://download.pytorch.org/whl/cu129"
@@ -36,3 +45,5 @@ url = "https://download.pytorch.org/whl/cu129"
 [tool.uv.sources]
 torch = { index = "pytorch-cu129" }
 torchvision = { index = "pytorch-cu129" }
+# Force setuptools to PyPI; the PyTorch index only mirrors an older release.
+setuptools = { index = "pypi" }
