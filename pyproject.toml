@@ -4,8 +4,10 @@ version = "0.1.0"
 description = "VIPAC dataset and validation analyses"
 requires-python = ">=3.10,<3.13"
 dependencies = [
-    "torch",
-    "torchvision",
+    # Lower bounds keep torch at or above the versions that fix
+    # CVE-2025-32434 (torch.load RCE) and related 2025 advisories.
+    "torch>=2.13.0",
+    "torchvision>=0.28.0",
     "numpy",
     "pandas",
     "pillow",
@@ -24,12 +26,13 @@ dependencies = [
 # not installed as a package.
 package = false
 
-# PyTorch wheels for CUDA 12.1 by default.
+# PyTorch wheels for CUDA 12.9. Requires NVIDIA driver >= 575; the cu130
+# index and the default PyPI build (CUDA 13.0) need driver >= 580.
 # CPU-only: change the URL below to https://download.pytorch.org/whl/cpu.
 [[tool.uv.index]]
-name = "pytorch-cu121"
-url = "https://download.pytorch.org/whl/cu121"
+name = "pytorch-cu129"
+url = "https://download.pytorch.org/whl/cu129"
 
 [tool.uv.sources]
-torch = { index = "pytorch-cu121" }
-torchvision = { index = "pytorch-cu121" }
+torch = { index = "pytorch-cu129" }
+torchvision = { index = "pytorch-cu129" }
