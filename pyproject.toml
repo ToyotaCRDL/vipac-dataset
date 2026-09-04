@@ -1,0 +1,35 @@
+[project]
+name = "vipac-dataset"
+version = "0.1.0"
+description = "VIPAC dataset and validation analyses"
+requires-python = ">=3.10,<3.13"
+dependencies = [
+    "torch",
+    "torchvision",
+    "numpy",
+    "pandas",
+    "pillow",
+    "matplotlib",
+    "scipy",
+    "joblib",
+    "seaborn",
+    "tqdm",
+    "piq",
+    "opencv-python",
+    "openai-clip",
+]
+
+[tool.uv]
+# The repo is run as `python -m vipac_analysis...` from the root,
+# not installed as a package.
+package = false
+
+# PyTorch wheels for CUDA 12.1 by default.
+# CPU-only: change the URL below to https://download.pytorch.org/whl/cpu.
+[[tool.uv.index]]
+name = "pytorch-cu121"
+url = "https://download.pytorch.org/whl/cu121"
+
+[tool.uv.sources]
+torch = { index = "pytorch-cu121" }
+torchvision = { index = "pytorch-cu121" }
